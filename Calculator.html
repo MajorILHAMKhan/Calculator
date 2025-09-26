@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>iPhone Style Calculator</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --btn: #f1f3f4;
+      --btn-op: #ff9f0a;
+      --btn-text: #000000;
+      --text: #000000;
+      --display-bg: #e5e5e5;
+    }
+    [data-theme="dark"] {
+      --bg: #000000;
+      --btn: #333333;
+      --btn-op: #ff9f0a;
+      --btn-text: #ffffff;
+      --text: #ffffff;
+      --display-bg: #1c1c1c;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100%;
+      background: var(--bg-gradient);
+      font-family: "SF Pro Display", "Segoe UI", sans-serif;
+      transition: background 0.5s ease;
+    }
+
+    .calculator {
+      background: var(--calc-bg);
+      padding: 20px;
+      border-radius: 40px;
+      width: 340px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.6);
+      animation: fadeIn 0.6s ease-in-out;
+      transition: background 0.5s ease;
+    }
+
+    .display {
+      background: var(--display-bg);
+      color: var(--display-color);
+      font-size: 2.8rem;
+      text-align: right;
+      padding: 25px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      box-shadow: inset 0 2px 8px rgba(255,255,255,0.05);
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    button {
+      height: 70px;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      font-weight: 500;
+      cursor: pointer;
+      background: var(--btn-dark);
+      color: var(--btn-dark-text);
+      box-shadow: 0 4px 8px rgba(0,0,0,.4), inset 0 2px 4px rgba(255,255,255,.05);
+      transition: all 0.15s ease, background 0.5s ease, color 0.5s ease;
+    }
+
+    button:hover { filter: brightness(1.2); }
+
+    button:active {
+      transform: scale(0.9);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), inset 0 4px 10px rgba(0,0,0,0.6);
+    }
+
+    /* Special colors */
+    .btn-gray { background: var(--btn-gray); color: var(--btn-gray-text); }
+    .btn-orange { background: var(--btn-orange); color: white; font-weight: bold; }
+
+    .zero {
+      grid-column: span 2;
+      border-radius: 35px;
+      text-align: left;
+      padding-left: 28px;
+    }
+
+    /* Theme Variables */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f0f0f, #1c1c1e);
+      --calc-bg: #000;
+      --display-bg: #1c1c1e;
+      --display-color: #fff;
+      --btn-dark: #333;
+      --btn-dark-text: #fff;
+      --btn-gray: linear-gradient(#d1d1d6, #a5a5a5);
+      --btn-gray-text: #000;
+      --btn-orange: linear-gradient(#ffb347, #ff9500);
+    }
+
+    body.light {
+      --bg-gradient: linear-gradient(135deg, #f2f2f7, #e5e5ea);
+      --calc-bg: #fff;
+      --display-bg: #f9f9f9;
+      --display-color: #000;
+      --btn-dark: #e5e5ea;
+      --btn-dark-text: #000;
+      --btn-gray: linear-gradient(#c7c7cc, #a5a5a5);
+      --btn-gray-text: #fff;
+      --btn-orange: linear-gradient(#ffb347, #ff9500);
+    }
+
+    /* Fade in */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Toggle Button */
+    .theme-toggle {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .theme-toggle button {
+      background: var(--btn-orange);
+      color: white;
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="theme-toggle">
+      <button onclick="toggleTheme()">☀️ / 🌙</button>
+    </div>
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="btn-gray" onclick="clearDisplay()">AC</button>
+      <button class="btn-gray" onclick="appendValue('±')">±</button>
+      <button class="btn-gray" onclick="appendValue('%')">%</button>
+      <button class="btn-orange" onclick="appendValue('/')">÷</button>
+
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button class="btn-orange" onclick="appendValue('*')">×</button>
+
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button class="btn-orange" onclick="appendValue('-')">−</button>
+
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button class="btn-orange" onclick="appendValue('+')">+</button>
+
+      <button class="zero" onclick="appendValue('0')">0</button>
+      <button onclick="appendValue('.')">.</button>
+      <button class="btn-orange" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    let currentInput = "";
+
+    function updateDisplay() {
+      display.textContent = currentInput || "0";
+    }
+
+    function appendValue(value) {
+      if (value === '±') {
+        if (currentInput) currentInput = String(-parseFloat(currentInput));
+      } else if (value === '%') {
+        if (currentInput) currentInput = String(parseFloat(currentInput) / 100);
+      } else {
+        currentInput += value;
+      }
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      currentInput = "";
+      updateDisplay();
+    }
+
+    function calculate() {
+      try {
+        currentInput = String(eval(currentInput));
+      } catch {
+        currentInput = "Error";
+      }
+      updateDisplay();
+    }
+
+    // Keyboard support
+    document.addEventListener("keydown", (e) => {
+      if (!isNaN(e.key) || "+-*/.".includes(e.key)) {
+        appendValue(e.key);
+      } else if (e.key === "Enter") {
+        calculate();
+      } else if (e.key === "Backspace") {
+        currentInput = currentInput.slice(0, -1);
+        updateDisplay();
+      } else if (e.key === "Escape") {
+        clearDisplay();
+      }
+    });
+
+    // Theme toggle
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+    }
+  </script>
+</body>
+</html>
